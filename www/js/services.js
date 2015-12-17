@@ -3,24 +3,28 @@
     // Declaring angular module
     var app = angular.module('starter');
 
+    // Defining angular factory
     app.factory('Session', function($http, $q) {
 
         // This is the API endpoint url
-        var api_url = 'http://localhost:5000/sessions/';
+        var api_url = 'http://localhost:1337/';
 
         //return $http.get('http://localhost:5000/sessions/:sessionId');
 
         return {
 
             // Makes API call for login
-            getHome: function(data, callback) {
+            userLogin: function(data, callback) {
 
                 // Request configuration
                 var deferred = $q.defer();
                 var _serverResponse = {};
                 var _clientRequest = {
-                    method: 'GET',
-                    url: api_url
+                    method: 'POST',
+                    url: api_url + 'user/login',
+                    data: {
+                        mobile: '9879879877',
+                    }
                 };
 
                 // Actually make API call
