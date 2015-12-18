@@ -67,14 +67,66 @@
         // Default constructor - self executing function
         (function _init() {
 
-            // If user object not found in $localStorage, then do a state tranistion to login
-            if (!$localStorage.user || $localStorage.user == '') {
-                $rootScope.is_logged_in = 0;
-                $state.go('login');
-                alert('Invalid session');
-            } else {
+            // Fetch user's required facebook details
+            ngFB.api({
+                path: '/me',
+                params: {
+                    fields: 'id,first_name,last_name,email,currency'
+                }
+            }).then(
+                function(user) {
 
-            }
+                    // Store user to $rootScope and $localStorage
+                    $rootScope.user = {};
+                    $rootScope.user.fb_id = user.id;
+                    $rootScope.user.first_name = user.first_name;
+                    $rootScope.user.last_name = user.last_name;
+                    $rootScope.user.profile_picture = "http://graph.facebook.com/" + user.id + "/picture";
+                    $rootScope.user.email = user.email;
+                    $rootScope.user.mobile = '';
+                    $rootScope.user.country = '';
+                    $rootScope.user.status = 1;
+                    $localStorage.user = $rootScope.user;
+
+                    console.log(user);
+                    console.log($rootScope.user);
+
+                    // Make an API call for login from Session service
+                    Session.userLogin($scope, function(response) {
+                        if (response.data) {
+                            console.log(response.data);
+                        } else {
+                            alert('Login error');
+                        }
+                    });
+
+                    // If user object not found in $localStorage, then do a state tranistion to login
+                    if (!$localStorage.user || $localStorage.user == '') {
+                        $rootScope.is_logged_in = 0;
+                        $state.go('login');
+                        alert('Invalid session');
+                    } else {
+
+                    }
+
+                    // Fetch user's facebook friends who are using the app
+                    ngFB.api({
+                        path: '/me/friends'
+                    }).then(
+                        function(facebook_friends) {
+                            // Store user to $rootScope and $localStorage
+                            $rootScope.facebook_friends = facebook_friends;
+                            $localStorage.facebook_friends = $rootScope.facebook_friends;
+                            console.log(facebook_friends);
+                        },
+                        function(error) {
+                            alert('Facebook error: ' + error.error_description);
+                        });
+
+                },
+                function(error) {
+                    alert('Facebook error: ' + error.error_description);
+                });
 
         })();
 
@@ -130,57 +182,7 @@
             $scope.$apply()
         };
 
-        // Fetch user's required facebook details
-        ngFB.api({
-            path: '/me',
-            params: {
-                fields: 'id,first_name,last_name,email,currency'
-            }
-        }).then(
-            function(user) {
 
-                // Store user to $rootScope and $localStorage
-                $rootScope.user = {};
-                $rootScope.user.fb_id = user.id;
-                $rootScope.user.first_name = user.first_name;
-                $rootScope.user.last_name = user.last_name;
-                $rootScope.user.profile_picture = "http://graph.facebook.com/" + user.id + "/picture";
-                $rootScope.user.email = user.email;
-                $rootScope.user.mobile = '';
-                $rootScope.user.country = '';
-                $rootScope.user.status = 1;
-                $localStorage.user = $rootScope.user;
-
-                console.log(user);
-                console.log($rootScope.user);
-
-                // Make an API call for login from Session service
-                Session.userLogin($scope, function(response) {
-                    if (response.data) {
-                        console.log(response.data);
-                    } else {
-                        alert('Login error');
-                    }
-                });
-
-                // Fetch user's facebook friends who are using the app
-                ngFB.api({
-                    path: '/me/friends'
-                }).then(
-                    function(facebook_friends) {
-                        // Store user to $rootScope and $localStorage
-                        $rootScope.facebook_friends = facebook_friends;
-                        $localStorage.facebook_friends = $rootScope.facebook_friends;
-                        console.log(facebook_friends);
-                    },
-                    function(error) {
-                        alert('Facebook error: ' + error.error_description);
-                    });
-
-            },
-            function(error) {
-                alert('Facebook error: ' + error.error_description);
-            });
 
         $scope.getContactList = function() {
             $cordovaContacts.find({

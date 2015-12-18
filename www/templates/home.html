@@ -17,19 +17,17 @@
         </ion-list>
     </ion-content>
 </ion-view> -->
-<ion-view view-title="{{user.name}}">
+<!-- <br />
+            <button class="button" ng-click="getContactList()">Load Contacts</button> -->
+<ion-view view-title="{{user.first_name+' '+user.last_name}}">
     <ion-content class="has-header">
-        <div class="list">
-            <a class="item item-avatar" href="#">
-                <img src="http://graph.facebook.com/{{user.id}}/picture?width=270&height=270">
-                <p>{{user.name}}</p>
-                <p>{{user.email}}</p>
-            </a>
-            <br />
-            <button class="button" ng-click="getContactList()">Load Contacts</button>
-        </div>
         <ion-refresher pulling-text="Pull to refresh" on-refresh="doRefresh()">
         </ion-refresher>
+        <div class="list" style="margin-bottom:0px;">
+            <a class="item item-avatar" href="#">
+                <img src="http://graph.facebook.com/{{user.fb_id}}/picture?width=270&height=270">
+            </a>
+        </div>
         <ion-list>
             <ion-item ng-repeat="session in sessions" href="#/detail/{{session.id}}">{{session.title}}</ion-item>
         </ion-list>
