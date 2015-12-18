@@ -62,7 +62,7 @@
     });
 
     // Defining angular controller
-    app.controller('SessionsCtrl', function($rootScope, $scope, Session, ngFB, $cordovaContacts, $localStorage) {
+    app.controller('SessionsCtrl', function($rootScope, $scope, Session, ngFB, $cordovaContacts, $localStorage, $state) {
 
         // Default constructor - self executing function
         (function _init() {
@@ -117,6 +117,19 @@
             "description": "Join Laura to learn different approaches to build modular JavaScript applications."
         }];
 
+        $scope.doRefresh = function() {
+            $scope.sessions.unshift({
+                "id": 5,
+                "title": "Incoming",
+                "speaker": "Incoming",
+                "time": "00:00",
+                "room": "Incoming",
+                "description": "Incoming"
+            })
+            $scope.$broadcast('scroll.refreshComplete');
+            $scope.$apply()
+        };
+
         // Fetch user's required facebook details
         ngFB.api({
             path: '/me',
@@ -131,7 +144,7 @@
                 $rootScope.user.fb_id = user.id;
                 $rootScope.user.first_name = user.first_name;
                 $rootScope.user.last_name = user.last_name;
-                $rootScope.user.profile_picture = "http://graph.facebook.com/"+user.id+"/picture";
+                $rootScope.user.profile_picture = "http://graph.facebook.com/" + user.id + "/picture";
                 $rootScope.user.email = user.email;
                 $rootScope.user.mobile = '';
                 $rootScope.user.country = '';

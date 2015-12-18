@@ -28,19 +28,29 @@
             <br />
             <button class="button" ng-click="getContactList()">Load Contacts</button>
         </div>
+        <ion-refresher pulling-text="Pull to refresh" on-refresh="doRefresh()">
+        </ion-refresher>
         <ion-list>
             <ion-item ng-repeat="session in sessions" href="#/detail/{{session.id}}">{{session.title}}</ion-item>
         </ion-list>
-        <ion-list>
+        <!-- <ion-list>
             <ion-item ng-if="contact.phoneNumbers && (contact.displayName || contact.name)" ng-repeat="contact in contacts">
                 <div ng-show="contact.phoneNumbers && (contact.displayName || contact.name)">
-                    <span>{{contact.id}}</span><br />
-                    <span>{{contact.displayName}}</span><br />
-                    <span>{{contact.name}}</span><br />
-                    <span ng-repeat="phone in contact.phoneNumbers"><span>{{phone.value}}</span><br /></span><br />
-                    <span ng-repeat="email in contact.emails"><span>{{email.value}}</span><br /></span>
+                    <span>{{contact.id}}</span>
+                    <br />
+                    <span>{{contact.displayName}}</span>
+                    <br />
+                    <span>{{contact.name}}</span>
+                    <br />
+                    <span ng-repeat="phone in contact.phoneNumbers"><span>{{phone.value}}</span>
+                    <br />
+                    </span>
+                    <br />
+                    <span ng-repeat="email in contact.emails"><span>{{email.value}}</span>
+                    <br />
+                    </span>
                 </div>
             </ion-item>
-        </ion-list>
+        </ion-list> -->
     </ion-content>
 </ion-view>
